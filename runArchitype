@@ -1,0 +1,4 @@
+#!/bin/bash
+cd /home/michael/Mike/newarchitype/
+START=`/usr/bin/python architype.py`
+echo $START
