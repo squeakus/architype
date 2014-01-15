@@ -1,3 +1,16 @@
+# This file is part of Architype.
+# Architype is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# Architype is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# You should have received a copy of the GNU General Public License 
+# along with Architype.  If not, see <http://www.gnu.org/licenses/>.
+# Author Jonathan Byrne 2014
+
 """This class contains demo methods for generating graphs. The methods
  use different functions from the geometry class to see if they look
  like pylons.  The results will be saved in pylon.mesh, which can then
