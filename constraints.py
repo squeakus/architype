@@ -7,7 +7,7 @@
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# You should have received a copy of the GNU General Public License 
+# You should have received a copy of the GNU General Public License
 # along with Architype.  If not, see <http://www.gnu.org/licenses/>.
 # Author Jonathan Byrne 2014
 
@@ -23,12 +23,12 @@ from math import sin, sqrt, radians, cos
 from random import randrange, randint
 
 LINE_POINT_LIMIT = 8000
-INSULATOR_LIMIT = 5200 
+INSULATOR_LIMIT = 5200
 STRUCT_LIMITS = (3100, 1800)
 LINE_LIMIT = INSULATOR_LIMIT + STRUCT_LIMITS[0]
 STRUCT_ANGLE = radians(35)
 STRUCT_ANGLE_RNGS = ((INSULATOR_LIMIT + STRUCT_LIMITS[0]) * \
-                              sin(STRUCT_ANGLE), 
+                              sin(STRUCT_ANGLE),
                           INSULATOR_LIMIT * sin(STRUCT_ANGLE) + \
                               STRUCT_LIMITS[1])
 CONDUCTOR_SAG = 12050
@@ -38,7 +38,7 @@ MIN_HEIGHT = CONDUCTOR_SAG + GROUND_CLEARANCE + INSULATOR_LIMIT
 def check_structure_constraint(my_nodes, line_nodes):
     """Verify that the structure points are not violating the structure
     constraints.
-    
+
     The structure constraints are that each structure point must be at
     least 3.1m away from the line point."""
 #    print(__name__,"check_structure_constraint")
@@ -48,14 +48,14 @@ def check_structure_constraint(my_nodes, line_nodes):
         for line_node in line_nodes:
             if line_node != node:
                 xyz_1 = (line_node['x'], line_node['y'], line_node['z'])
-                insulator_pt = (xyz_0[0], xyz_0[1] - INSULATOR_LIMIT, 
+                insulator_pt = (xyz_0[0], xyz_0[1] - INSULATOR_LIMIT,
                                    xyz_0[2])
                 dist = euclidean_distance(xyz_0, xyz_1)
 #                print(__name__, "check_structure_constraint",
 #                      dist, node, line_node)
                 #y-axis
                 if xyz_1[1] > xyz_0[1]:
-                    #3.1m limit, above the line pt 
+                    #3.1m limit, above the line pt
                     if dist < STRUCT_LIMITS[0]:
                         return False
                 else:
@@ -66,13 +66,13 @@ def check_structure_constraint(my_nodes, line_nodes):
                         if dist < STRUCT_LIMITS[0]:
                             return False
                     else:
-                        #Check the x-axis 1.8 radi                   
+                        #Check the x-axis 1.8 radi
                         if ((xyz_0[0] - STRUCT_ANGLE_RNGS[1]) < xyz_1[0] or \
                                 (xyz_0[0] + STRUCT_ANGLE_RNGS[1]) > xyz_1[0]):
                             if dist < STRUCT_LIMITS[1]:
                                 return False
     return True
-           
+
 def check_insulator_constraint(my_nodes, my_graph):
     """Verify that the insulator is not violating any constraints.
 
@@ -94,7 +94,7 @@ def check_insulator_constraint(my_nodes, my_graph):
 def check_line_constraint(line_nodes):
     """Verify that the line points are not violating the line
     constraints.
-    
+
     The line constraints are that each line point must be at least 8m
     away."""
 #    print(__name__,"check_line_constraint")
@@ -104,11 +104,11 @@ def check_line_constraint(line_nodes):
         xyz = (current_node['x'], current_node['y'], current_node['z'])
         for j in range(i+1, len(line_nodes)):
             cmpr_node = line_nodes[j]
-            dist = euclidean_distance(xyz, 
-                                      (cmpr_node['x'], 
-                                       cmpr_node['y'], 
+            dist = euclidean_distance(xyz,
+                                      (cmpr_node['x'],
+                                       cmpr_node['y'],
                                        cmpr_node['z']))
-#            print(__name__, "check_line_constraint", 
+#            print(__name__, "check_line_constraint",
 #                  dist, i, j, current_node, cmpr_node)
             if dist < LINE_LIMIT:
                 return False
@@ -189,26 +189,26 @@ def line_configuration(angle = -1, angle_1 = -1, extra_line_limit = 0, invert=Fa
         new_coords = [(0, 0, 0)]
         angle_r = radians(angle)
         x = int(cos(angle_r) * line_limit)
-        y = 0 
+        y = 0
         z = int(sin(angle_r) * line_limit)
-        new_coords.append((x, 
-                           y, 
-                           z)) 
-        z_side = max(line_limit, z * 2)        
+        new_coords.append((x,
+                           y,
+                           z))
+        z_side = max(line_limit, z * 2)
         #x-coord for point 1 and 3 are always 0
         if angle_1 == -1:
-            new_coords.append((0, 
-                               0, 
-                               z_side)) 
+            new_coords.append((0,
+                               0,
+                               z_side))
         else:
             #Cannot be greater than 150
             angle_1 = min(angle_1, 150)
             angle_r = radians(angle_1)
             x = max(0, x + (int(cos(angle_r) * line_limit)))
             z = max(line_limit + z, z + (int(sin(angle_r) * line_limit)))
-            new_coords.append((x, 
-                               0, 
-                               z)) 
+            new_coords.append((x,
+                               0,
+                               z))
         if invert:
             invert_x = (new_coords[0][0], new_coords[2][0])
             new_coords[0] = (invert_x[1], new_coords[0][1], new_coords[0][2])
@@ -243,7 +243,7 @@ PROFILE = False
 
 if __name__ == '__main__':
     import pylon
-    #TODO proper unittest framework    
+    #TODO proper unittest framework
     if PROFILE:
         import cProfile, pstats
         profile_file = 'constraints_test'

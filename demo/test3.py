@@ -7,7 +7,7 @@
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# You should have received a copy of the GNU General Public License 
+# You should have received a copy of the GNU General Public License
 # along with Architype.  If not, see <http://www.gnu.org/licenses/>.
 # Author Jonathan Byrne 2014
 
@@ -19,7 +19,7 @@ def mutant():
   print "calling mutant"
   g = graph.graph()
   subdivide_line([100,0,0],[1000,900,900],2)
-  
+
   handrail_node_ids=[]
   arm_node_ids=[]
   support_node_ids=[]
@@ -33,18 +33,18 @@ def mutant():
   pointB = [0, 0, height]
 
   def brace(t):
-    retval = (lambda t: pt_plus_pt((lambda t: [width, 0.0, 0.0])(t), 
+    retval = (lambda t: pt_plus_pt((lambda t: [width, 0.0, 0.0])(t),
                                    (lambda t: pt_plus_pt(support(t),[0,0,0]))(t)))(t)
     return retval
 
   def arm(t):
-    retval = (lambda t: pt_plus_pt((lambda t: [width * 3, 0.0, 0.0])(t), 
+    retval = (lambda t: pt_plus_pt((lambda t: [width * 3, 0.0, 0.0])(t),
                                    (lambda t: pt_plus_pt(support(t),[0,0,0]))(t)))(t)
     return retval
 
 
   def support(t):
-    retval=(lambda t: pt_plus_pt((lambda t: interpolate(t, (pointA, pointB)))(t), 
+    retval=(lambda t: pt_plus_pt((lambda t: interpolate(t, (pointA, pointB)))(t),
                                  (lambda t: [0.0, 0.0, 0.0])(t)))(t)
     return retval
 
@@ -87,7 +87,7 @@ def mutant():
   #     dist = distance(startpoint, endpoint)
   #     arm_points = subdivide_line(startpoint, endpoint, 3)
   #     print "calling arm add nodes"
-  #     arm_ids.append(g.add_nodes(arm_points, "arm", True)) 
+  #     arm_ids.append(g.add_nodes(arm_points, "arm", True))
   #   print "arm ids:",arm_ids
   #   g.weave_nodes(arm_ids[0], arm_ids[1],1)
   #   #g.connect_neighbours(arm_ids, 1800, True)

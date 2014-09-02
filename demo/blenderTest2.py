@@ -7,11 +7,11 @@
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# You should have received a copy of the GNU General Public License 
+# You should have received a copy of the GNU General Public License
 # along with Architype.  If not, see <http://www.gnu.org/licenses/>.
 # Author Jonathan Byrne 2014
 
-from geometry import * 
+from geometry import *
 import graph
 shape = graph.graph()
 map_mapply([lambda x : [shape.connect((8, 4, 1), x)],lambda x : [dropPerpendicular(x, 2)],lambda x : connect3(x, 2),lambda x : [shape.connect((1, 5, 6), x)],lambda x : [shape.connect((13, 6, 8), x)]], map(lambda t : bezier_form(t, ((4, 1, 0), (2, 14, 5), (12, 10, 7), (10, 10, 15))), make_scalar_list(10)))

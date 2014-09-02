@@ -7,7 +7,7 @@
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# You should have received a copy of the GNU General Public License 
+# You should have received a copy of the GNU General Public License
 # along with Architype.  If not, see <http://www.gnu.org/licenses/>.
 # Author Jonathan Byrne 2014
 
@@ -23,7 +23,7 @@ from geometry import *
 from math import sin, pi, sqrt, pow
 
 LENGTH = 1000 #make it big to keep it in integers
-WIDTH = 5000 
+WIDTH = 5000
 HEIGHT = 55000
 ORIGIN = [0, 0, 0]
 LEVELS = 3
@@ -155,7 +155,7 @@ def lambda_graph():
         return retval
 
     def arm(t):
-        retval = (lambda t: pt_plus_pt((lambda t: section['arm_offset'])(t), 
+        retval = (lambda t: pt_plus_pt((lambda t: section['arm_offset'])(t),
                                    (lambda t: pt_plus_pt(centre(t),[0,0,0]))(t)))(t)
         return retval
 
@@ -184,7 +184,7 @@ def lambda_graph():
             for brace_id in all_brace_ids:
                 endpoint = pylon_graph.node[brace_id]['xyz']
                 arm_points = subdivide_line(startpoint, endpoint, 2)
-                arm_ids.extend(pylon_graph.add_nodes(arm_points, 'arm', True)) 
+                arm_ids.extend(pylon_graph.add_nodes(arm_points, 'arm', True))
             pylon_graph.connect_neighbours(arm_ids, 5000, True)
 
 
@@ -204,7 +204,7 @@ def lambda_graph():
             node_id = pylon_graph.add_unique_node(centre(t), 'centre')
             centre_ids.append(node_id)
             brace_ids.extend(cross_brace(node_id, t))
-                
+
         if add_lines:
             lines = 3
             brace_set = list(set(brace_ids))
@@ -222,7 +222,7 @@ def lambda_graph():
 
     section = {'base': [0, max_width, 0],'top': [0, mid_width, height * 0.4],
                'base_offset':  [max_width,0,0], 'top_offset': [mid_width,0,0],
-               'arm_offset':[arm_width, -mid_width, 0.0], 'subsecs': 5}    
+               'arm_offset':[arm_width, -mid_width, 0.0], 'subsecs': 5}
     make_section()
 
     section = {'base': [0 , mid_width, height * 0.4],'top': [0, mid_width, height * 0.8],
@@ -272,7 +272,7 @@ def constraint_test():
     #Generated via grammar
     gr = grammar.Grammar('grammars/test_constraints.bnf')
     inputs = ([1 for _ in range(100)], [ i%3 for i in range(100)])
-    for _input in inputs: 
+    for _input in inputs:
         output = gr.generate(_input)
         azr = analyser.Analyser('test',output['phenotype'],True)
         try:
@@ -288,7 +288,7 @@ def constraint_test():
         azr.print_stresses()
         if show_analysis:
             azr.show_analysis()
-            
+
     #Fixed generated
     lengths = (1000, 10000)
     levels = (5, 10)

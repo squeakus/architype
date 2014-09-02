@@ -7,13 +7,13 @@
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# You should have received a copy of the GNU General Public License 
+# You should have received a copy of the GNU General Public License
 # along with Architype.  If not, see <http://www.gnu.org/licenses/>.
 # Author Jonathan Byrne 2014
 
 """ This class will optimize an individual mesh generated
-by the grammar by iteratively calculating the required section 
-sizes for optimal sizing, and then re-analysing the structure.  
+by the grammar by iteratively calculating the required section
+sizes for optimal sizing, and then re-analysing the structure.
 Copyright (c) 2010
 Michael Fenton
 Hereby licensed under the GNU GPL v3."""
@@ -22,7 +22,7 @@ import analyser as AZR
 
 class Optimizer():
     def __init__(self,uid,program):
-        self.uid = uid  
+        self.uid = uid
         self.program = program
         self.analyser = AZR.Analyser(uid,program)
         self.bridge_weight=0
@@ -32,8 +32,8 @@ class Optimizer():
         self.load_elems=[]
         self.beams=[]
         self.stress_log=[]
-        self.iterations = 3   
-    
+        self.iterations = 3
+
     def first_reassign_size(self,num,file_name):
         self.bridge_weight=0
         self.analyser.create_graph()
@@ -45,7 +45,7 @@ class Optimizer():
         stress_list = self.analyser.parse_results()
   #      self.log_results(stress_list)
         self.reassign_materials_quickly(stress_list)
-      
+
     def reassign_size(self,num,file_name):
         self.bridge_weight=0
         self.analyser.create_slf_file()
@@ -81,7 +81,7 @@ class Optimizer():
             self.reassign_size(n,file_name)
      #   self.write_log(file_name)
         if button == True:
-            self.analyser.show_analysis()      
+            self.analyser.show_analysis()
 
     def write_log(self,name):
         log = file("stressLogs/stress_log."+str(name),"w")
@@ -93,8 +93,8 @@ class Optimizer():
             log.write("\n\tmax zx stress is:" + str(stress[2]))
             log.write("\n\tthe bridge weight (in kg) is:" + str(stress[3]))
         log.close()
-    
-    def log_results(self,stress_list):        
+
+    def log_results(self,stress_list):
         for stress in stress_list:
             i,xx,xy,zx = stress['id'],stress['xx'],stress['xy'],stress['zx']
             stx, sty, stz = (0,0,0)
@@ -106,25 +106,25 @@ class Optimizer():
                 stz = abs(zx)
         weight = self.find_weight()
         big_log = [stx,sty,stz,weight]
-        self.stress_log.append(big_log)       
-        
-    def reassign_materials(self,stress_list):   
+        self.stress_log.append(big_log)
+
+    def reassign_materials(self,stress_list):
         for stress in stress_list[::2]:
             i,xx,xy,zx = stress['id'],stress['xx'],stress['xy'],stress['zx']
             st = self.analyser.material['allowed_xx_compression']
             if abs(xx) < st and abs(xy) < st and abs(zx) < st:
                 if int(self.analyser.edge_list[i]['material']) < (len(self.analyser.beams)-1):
-                    self.analyser.edge_list[i]['material'] = int(self.analyser.edge_list[i]['material']) -1 
+                    self.analyser.edge_list[i]['material'] = int(self.analyser.edge_list[i]['material']) -1
                     self.analyser.edge_list[i]['mass'] = float(self.analyser.edge_list[i]['length']) * float(self.analyser.beams[(int(self.analyser.edge_list[i]['material'])-1)]['unitweight'])*10
                 # this means that the beam is over-performing, i.e. it is bigger than it needs to be and we can reduce its size.
             else:
                 if int(self.analyser.edge_list[i]['material']) > 0:
-                    self.analyser.edge_list[i]['material'] = int(self.analyser.edge_list[i]['material']) +1                               
+                    self.analyser.edge_list[i]['material'] = int(self.analyser.edge_list[i]['material']) +1
                     self.analyser.edge_list[i]['mass'] = float(self.analyser.edge_list[i]['length']) * float(self.analyser.beams[(int(self.analyser.edge_list[i]['material'])-1)]['unitweight'])*10
                 # this means that the beam is over-stressed and we have to make it bigger. it might be easiest to start off with ridiculously
                 # massive beams and then gradually make everything smaller, rather than starting off small and making things bigger.
 
-    def reassign_materials_quickly(self,stress_list):   
+    def reassign_materials_quickly(self,stress_list):
         for stress in stress_list[::2]:
             i,xx,xy,zx = stress['id'],stress['xx'],stress['xy'],stress['zx']
             st = self.analyser.material['allowed_xx_compression']

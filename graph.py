@@ -7,7 +7,7 @@
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# You should have received a copy of the GNU General Public License 
+# You should have received a copy of the GNU General Public License
 # along with Architype.  If not, see <http://www.gnu.org/licenses/>.
 # Author Jonathan Byrne 2014
 
@@ -139,7 +139,7 @@ class graph(nx.Graph):
     def add_unique_node(self, coords, node_type):
         """Add a node and connect it to two others, ensuring that it's
         not lonesome"""
-        #TODO Assert that all nodes are lists of ints and not empty, when? Catch exceptions        
+        #TODO Assert that all nodes are lists of ints and not empty, when? Catch exceptions
         new = True
         x, y, z = coords[0], coords[1], coords[2]
         a_coords = [int(x), int(y), int(z)]
@@ -230,19 +230,19 @@ class graph(nx.Graph):
             self.add_edge(a_list[i], b_list[i])
             self.add_edge(a_list[i], b_list[off])
             self.add_edge(a_list[off], b_list[i])
-    
-    def sierpinski(self, tri, node_type, depth):      
+
+    def sierpinski(self, tri, node_type, depth):
         if depth > 1:
             node_ids = []
             triangles = []
-            triangles.append((tri[0],midpoint(tri[0], tri[1]), 
+            triangles.append((tri[0],midpoint(tri[0], tri[1]),
                               midpoint(tri[0], tri[2])))
-            triangles.append((tri[1],midpoint(tri[1], tri[0]), 
+            triangles.append((tri[1],midpoint(tri[1], tri[0]),
                               midpoint(tri[1], tri[2])))
-            triangles.append((tri[2],midpoint(tri[2], tri[0]), 
+            triangles.append((tri[2],midpoint(tri[2], tri[0]),
                               midpoint(tri[2], tri[1])))
             triangles.append((midpoint(tri[0], tri[1]),
-                              midpoint(tri[1], tri[2]), 
+                              midpoint(tri[1], tri[2]),
                               midpoint(tri[0], tri[2])))
             for idx, triangle in enumerate(triangles):
                 ids = self.sierpinski(triangle, node_type, depth-1)
@@ -256,14 +256,14 @@ class graph(nx.Graph):
     def varinski(self, tri, node_type, depths):
         triangles = []
         node_ids = []
-        triangles.append((tri[0],midpoint(tri[0], tri[1]), 
+        triangles.append((tri[0],midpoint(tri[0], tri[1]),
                           midpoint(tri[0], tri[2])))
-        triangles.append((tri[1],midpoint(tri[1], tri[0]), 
+        triangles.append((tri[1],midpoint(tri[1], tri[0]),
                           midpoint(tri[1], tri[2])))
-        triangles.append((tri[2],midpoint(tri[2], tri[0]), 
+        triangles.append((tri[2],midpoint(tri[2], tri[0]),
                           midpoint(tri[2], tri[1])))
         triangles.append((midpoint(tri[0], tri[1]),
-                          midpoint(tri[1], tri[2]), 
+                          midpoint(tri[1], tri[2]),
                           midpoint(tri[0], tri[2])))
 
         for idx, triangle in enumerate(triangles):
@@ -407,7 +407,7 @@ class graph(nx.Graph):
         excess_nodes = list(set(excess_nodes))
         for node in excess_nodes:
             new_graph.remove_node(node)
-        
+
         arm_ids = []
         mirror_ids = []
         for nodeid in new_graph.node:
@@ -590,8 +590,8 @@ class pylon_graph(graph):
                         #Only need to verify the newly added node
                     self.valid = constraints.check_insulator_constraint([new_node], self)
                 if not self.valid and __debug__:
-#                    raise ValueError('Violating insulator constraint:',new_node)                
-                    print('Violating insulator constraint:',new_node)                
+#                    raise ValueError('Violating insulator constraint:',new_node)
+                    print('Violating insulator constraint:',new_node)
                 #Check if the line node violates the nodes
                 self.valid = constraints.check_structure_constraint(node_list, [new_node])
                 if not self.valid and __debug__:
@@ -601,8 +601,8 @@ class pylon_graph(graph):
                 #Only check if the new node violates the line nodes
                 self.valid = constraints.check_structure_constraint([new_node], self.line_nodes)
                 if not self.valid and __debug__:
-#                    raise ValueError('Violating structure constraint:',[new_node])   
-                    print('Violating structure constraint:',[new_node])   
+#                    raise ValueError('Violating structure constraint:',[new_node])
+                    print('Violating structure constraint:',[new_node])
         return node_id
 
     def analyser_node_structure(self, my_graph):

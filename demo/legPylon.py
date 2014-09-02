@@ -7,7 +7,7 @@
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# You should have received a copy of the GNU General Public License 
+# You should have received a copy of the GNU General Public License
 # along with Architype.  If not, see <http://www.gnu.org/licenses/>.
 # Author Jonathan Byrne 2014
 
@@ -48,7 +48,7 @@ def lambda_graph():
     min_width = 500
     max_height = 55000
     line_points = line_configuration(70,110,0,False)
-    
+
     height_sizes = [2, 2, 3]
     #this list is inverted as width decreases
     width_sizes = [10, 5, 5, 10, 40, 40]
@@ -134,7 +134,7 @@ def lambda_graph():
                        base_offset=[width[x],0,0],
                        brace_type=brace_type[x],
                        top_offset=[width[x+1],0,0],
-                       subsecs=subsecs[x])  
+                       subsecs=subsecs[x])
         make_section(x)
 
     #pylon_graph.connect_nodes(centre_ids)

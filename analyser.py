@@ -7,17 +7,17 @@
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# You should have received a copy of the GNU General Public License 
+# You should have received a copy of the GNU General Public License
 # along with Architype.  If not, see <http://www.gnu.org/licenses/>.
 # Author Jonathan Byrne 2014
 
 """ This class contains functions for parsing the programs generated
 by the grammar, creating the resulting graphs, converting them to
 slffea files, running slffea, collating the results and using them to
-generate a fitness value. 
+generate a fitness value.
 
 ALL UNITS IN MILLIMETERS, NEWTONS
-  
+
 Copyright (c) 2010
 Jonathan Byrne, Michael Fenton, Erik Hemberg and James McDermott
 Hereby licensed under the GNU GPL v3."""
@@ -32,7 +32,7 @@ import optimizer as OPT
 # global class variables
 SHOW_ANALYSIS = False
 OPTIMIZE = False # Turns on the pre-fitness function optimizer which will optimize the whole population
-DEFAULT_FIT = 100000000000000 
+DEFAULT_FIT = 100000000000000
 #random.seed(0)
 
 def eval_or_exec(s):
@@ -111,7 +111,7 @@ class Analyser():
         self.BROKEN = False
         self.GROUND_BROKEN = False # Change this to true to test the case with a broken grounding wire
         self.load_case = "Case5b" # Choose from "Case1a" (extreme wind), "Case2a" (Uniform, heavy ice), "Case3" (Combined wind and ice), "Case5b" (Security loads, Broken wire condition)
-        self.terrain_category = 2 
+        self.terrain_category = 2
         self.compliance = 1000000000000
         self.max_displacement = 3000
         self.beams=[]
@@ -127,13 +127,13 @@ class Analyser():
         self.beam_comp_allows=[]
         self.material = {}
         self.material['name'] = 'steel'
-        
+
         if self.material['name'] == 'steel':
             self.material['number'] = 60
             self.material['leg_number'] = 120
             self.material['allowed_xx_compression'] = self.material['allowed_xx_tension'] = self.material['allowed_xy_tension'] = self.material['allowed_xy_compression'] = self.material['allowed_zx_tension'] = self.material['allowed_zx_compression'] = (275) # 275 N/mm2
             self.material['maxmoment'] = (3*10**7)
-        
+
         if self.material['name'] == 'timber':
             self.material['width'] = 100 # mm
             self.material['height'] = 200 # mm
@@ -224,7 +224,7 @@ class Analyser():
     def save_dxf(self, gen, name):
         """outputs nodes and edges in dxf format for other software"""
         if name == 'indiv':
-            filename = "dxf/gen" + str(gen) + "ind"  + str(self.unique_id) + ".dxf"       
+            filename = "dxf/gen" + str(gen) + "ind"  + str(self.unique_id) + ".dxf"
         DXF = file(filename, 'w')
         DXF.write('  0\n')
         DXF.write('SECTION\n')
@@ -303,11 +303,11 @@ class Analyser():
                     elif (float(node['z'])/1000) < 10+He:
                         Vz = Vr(((0.25/(10+He))*(float(node['z'])/1000))+0.75)
                     Qz = (roa/2)*(Vz**2)
-                    
-                    
+
+
                     As = 0# Structural components of projected area on windward side - the area over which the wind pressure acts, to be broken into panels across the height of the structure.
-                
-                
+
+
                     PTW = Qz*As*Cn*(1+(Kcom*Gb))*K0 # PTW is the maximum wind load acting on a particular panel, it can be split in to 50% acting on the top and 50% on the bottom (or i presume the load can be spread evenly across all nodes within As)
 
     def assign_load_case(self):
@@ -326,7 +326,7 @@ class Analyser():
             self.BROKEN = False
             self.GROUND_BROKEN = False
             self.mean_hourly_wind_speed = 25 # meters/sec
-            self.vertical_cable_load = 171000 
+            self.vertical_cable_load = 171000
             self.transverse_cable_load = 0
             self.longitudinal_cable_load = 0
             self.vertical_ground_load = 46000
@@ -344,7 +344,7 @@ class Analyser():
             self.longitudinal_ground_load = 0
         if self.load_case == "Case5b": # Security loads. Broken wire condition
             self.BROKEN = True
-            self.mean_hourly_wind_speed = 25 # meters/sec 
+            self.mean_hourly_wind_speed = 25 # meters/sec
             self.vertical_cable_load = 50000
             self.vertical_cable_load_broken = 37500 # (to be placed on any single one of the cables, doesn't matter which)
             self.transverse_cable_load = 0
@@ -355,7 +355,7 @@ class Analyser():
             self.longitudinal_ground_load = 16000 # (to be placed on the grounding cable, during broken condition)
         if self.load_case == "Test": # Security loads. Broken wire condition
             self.BROKEN = True
-            self.mean_hourly_wind_speed = 35 # meters/sec 
+            self.mean_hourly_wind_speed = 35 # meters/sec
             self.vertical_cable_load = 171000
             self.vertical_cable_load_broken = 37500 # (to be placed on any single one of the cables, doesn't matter which)
             self.transverse_cable_load = 82000
@@ -370,45 +370,45 @@ class Analyser():
         """build fixed points list and load list"""
         for node in self.node_list:
             if  node['label'] == 'base':
-                self.fixed_list.append([node, True])            
+                self.fixed_list.append([node, True])
             if node['label'] == 'line':
                 self.load_nodes.append(int(node['id']))
             if node['label'] == 'ground':
                 self.ground_node.append(int(node['id']))
         if self.BROKEN:
             point = self.load_nodes.pop(-2)
-            self.break_node.append(point) 
+            self.break_node.append(point)
             if self.GROUND_BROKEN == False:
                 joint = self.load_nodes.pop()
-                self.break_node.append(joint)          
+                self.break_node.append(joint)
 
         #SLFFEA applies load to edges, find edges connecting load_nodes
         for edge in self.edge_list:
             pt_a, pt_b = int(edge['pt_a']), int(edge['pt_b'])
             if pt_a in self.load_nodes or pt_b in self.load_nodes:
-                self.load_elems.append(edge['id'])         
-            
+                self.load_elems.append(edge['id'])
+
         #SLFFEA doesn't consider the mass of the element; we have to compute this ourselves and
         #add it as a point load to the nodes at each end of the element
-            load = float(edge['mass']) / 2   # load per node is in newtons                           
+            load = float(edge['mass']) / 2   # load per node is in newtons
             loadA = [pt_a,load]
             loadB = [pt_b,load]
             self.nodeselfloads.append(loadA)
             self.nodeselfloads.append(loadB)
         self.nodeselfloads.sort(key=itemgetter(0))
-        #Now we need to find the nodes with the same node[0] (i.e. the same nodes) and add up the individual loads (node[1]) to return the total load on that particular node.        
+        #Now we need to find the nodes with the same node[0] (i.e. the same nodes) and add up the individual loads (node[1]) to return the total load on that particular node.
 
         if self.nodeselfloads:
             while len(self.nodeselfloads) > (len(self.node_list) + 20):  #
                 last = self.nodeselfloads[-1]
                 for i in range(len(self.node_list)):
                     if i < len(self.nodeselfloads):
-                        if last[0] == self.nodeselfloads[i][0]:  
+                        if last[0] == self.nodeselfloads[i][0]:
                             last[1] = last[1] + self.nodeselfloads[i][1]
                             del self.nodeselfloads[i]
                         else:
                             last = self.nodeselfloads[i]
-            while len(self.nodeselfloads) > (len(self.node_list)):            
+            while len(self.nodeselfloads) > (len(self.node_list)):
                 last = self.nodeselfloads[-1]
                 for i in range(len(self.node_list)):
                     if last[0] == self.nodeselfloads[-i][0]:
@@ -417,8 +417,8 @@ class Analyser():
                     else:
                         last = self.nodeselfloads[-i]
         else:
-            print "ERROR!!********************NO NODESELFLOADS THING!************************"           
-           
+            print "ERROR!!********************NO NODESELFLOADS THING!************************"
+
     def assign_size(self):
         allowables = open('./tables/CHS_compression_resistance_tables.txt', 'r')
         tables = open('./tables/CHSTables.txt', 'r')
@@ -430,7 +430,7 @@ class Analyser():
             else:
                 line = line.split()
                 idx = i-number
-                one, one_point_five, two, two_point_five, three, three_point_five, four, five, six, seven, eight, nine, ten = float(line[3]),float(line[4]),float(line[5]),float(line[6]),float(line[7]),float(line[8]),float(line[9]),float(line[10]),float(line[11]),float(line[12]),float(line[13]),float(line[14]),float(line[15])               
+                one, one_point_five, two, two_point_five, three, three_point_five, four, five, six, seven, eight, nine, ten = float(line[3]),float(line[4]),float(line[5]),float(line[6]),float(line[7]),float(line[8]),float(line[9]),float(line[10]),float(line[11]),float(line[12]),float(line[13]),float(line[14]),float(line[15])
                 material_properties = {'id':idx,'1':one,'1.5':one_point_five,'2':two,'2.5':two_point_five,
                                         '3':three,'3.5':three_point_five,'4':four,'5':five,'6':six,'7':seven,
                                         '8':eight,'9':nine,'10':ten}
@@ -456,7 +456,7 @@ class Analyser():
 
     def create_slf_file(self):
         """outputs an slf file in beam format"""
-        mesh = open(self.name, 'w') 
+        mesh = open(self.name, 'w')
         mesh.write('numel numnp nmat nmode (This is for a beam bridge)\n')
         mesh.write(str(len(self.edge_list))+'\t'+str(len(self.node_list))
                     + '\t'+str(len(self.beams)) + '\t0\n')
@@ -465,9 +465,9 @@ class Analyser():
         for i,beam in enumerate(self.beams):
              mesh.write(str(i)+' '+str(self.beams[i]['emod'])+'\t0.3000\t'
                         + str(self.beams[i]['density'])+'\t'+str(self.beams[i]['area'])
-                        + '\t'+str(self.beams[i]['iy'])+'\t'+str(self.beams[i]['ix']) + '\n')           
+                        + '\t'+str(self.beams[i]['iy'])+'\t'+str(self.beams[i]['ix']) + '\n')
         mesh.write('el no.,connectivity, matl no, element type\n')
-        for i, edge in enumerate(self.edge_list): 
+        for i, edge in enumerate(self.edge_list):
             mesh.write(str(i)+'\t'+str(edge['pt_a'])+'\t'+str(edge['pt_b'])
                        + '\t'+str(edge['material'])+'\t2 \n')
         mesh.write('node no., coordinates\n')
@@ -494,15 +494,15 @@ class Analyser():
         mesh.write('-10\nprescribed angle phi z: node angle value\n')
         for node in self.fixed_list:
             mesh.write(node[0]['id']+"\t0.0\n")
-        mesh.write('-10\nnode with point load x, y, z and 3 moments phi x, phi y, phi z\n')          
+        mesh.write('-10\nnode with point load x, y, z and 3 moments phi x, phi y, phi z\n')
         if self.BROKEN:
-            for node in self.nodeselfloads: 
+            for node in self.nodeselfloads:
                 trans = 0
                 broken_long = 0
                 for thing in self.load_nodes:
                     if thing == node[0]:
                         node[1] = node[1] + self.vertical_cable_load
-                        trans = self.transverse_cable_load 
+                        trans = self.transverse_cable_load
                 if self.GROUND_BROKEN:
                     for thing in self.ground_node:
                         if thing == node[0]:
@@ -522,11 +522,11 @@ class Analyser():
                     for thing in self.break_node:
                         if thing == node[0]:
                             node[1] = node[1] + self.vertical_cable_load_broken
-                            broken_long = self.longitudinal_cable_load 
+                            broken_long = self.longitudinal_cable_load
                             trans = self.transverse_cable_load
                 mesh.write(str(node[0])+'\t'+str(broken_long)+'\t'+str(trans)+'\t-'+str(round(node[1],5))+'\t0\t0\t0\n')
         else:
-            for node in self.nodeselfloads: 
+            for node in self.nodeselfloads:
                 trans = 0
                 for yolk in self.load_nodes:
                     if yolk == node[0]:
@@ -537,7 +537,7 @@ class Analyser():
                         node[1] = node[1] + self.vertical_ground_load
                         trans = self.transverse_ground_load
                 mesh.write(str(node[0])+'\t0\t'+str(trans)+'\t-'+str(round(node[1],5))+'\t0\t0\t0\n')
-        mesh.write('-10\nelement with distributed load in global beam y and z coordinates\n')                    
+        mesh.write('-10\nelement with distributed load in global beam y and z coordinates\n')
         mesh.write('-10\nelement no. and gauss pt. no. with local stress vector xx and moment xx,yy,zz\n-10')
         mesh.close()
 
@@ -557,7 +557,7 @@ class Analyser():
             thing = line.strip()
             yes = thing.split()
             self.compliance = yes[-3]
-            
+
     def show_analysis(self):
         """use bmpost to show stresses"""
         cmd = "echo " + self.name + '.obm | bmpost'
@@ -635,10 +635,10 @@ class Analyser():
                         max_displacement = displacement
         for edge in self.edge_list:
             weight = float(edge['mass'])/10 # weight is in kilograms (mass in newtons)
-            total_length = float(total_length) + float(edge['length'])  
+            total_length = float(total_length) + float(edge['length'])
             total_weight = float(total_weight) + float(weight)
-        beams = len(self.edge_list)   
-        compliance = float(self.compliance) 
+        beams = len(self.edge_list)
+        compliance = float(self.compliance)
         if hasattr(self.my_graph, 'valid') and self.my_graph.valid is False:
             print(__name__, "calculate_fitness", hasattr(self.my_graph, 'valid'), self.my_graph.valid, max_displacement, compliance, total_weight, DEFAULT_FIT)
             max_displacement = DEFAULT_FIT
@@ -671,7 +671,7 @@ class Analyser():
         if OPTIMIZE:
             self.run_optimization()
         self.parse_results()
-        return self.calculate_fitness()       
+        return self.calculate_fitness()
 
     def show_mesh(self):
         """generate and show mesh stresses using bmpost"""

@@ -7,7 +7,7 @@
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# You should have received a copy of the GNU General Public License 
+# You should have received a copy of the GNU General Public License
 # along with Architype.  If not, see <http://www.gnu.org/licenses/>.
 # Author Jonathan Byrne 2014
 
@@ -50,7 +50,7 @@ class GE(object):
         self.best_ever = min(self.individuals)
         self.fronts = []
         self.individuals.sort()
-        
+
         print "creating meshes"
         evolver.create_meshes(self.individuals)
         evolver.print_stats(1, self.individuals)
@@ -175,7 +175,7 @@ class GUI:
         self.popup.add_command(label="Analyse (a)",
                                command=lambda: self.analyse_indiv())
         self.popup.add_command(label="Show Fitness (f)",
-                               command=lambda: self.show_fitness())                      
+                               command=lambda: self.show_fitness())
         self.popup.add_separator()
         self.popup.add_command(label="Small Mutate (s)",
                                command=lambda: self.mutate("nodal"))
@@ -428,7 +428,7 @@ class GUI:
                 else:
                     file_name = name
                 evolver.run_optimization(indiv,file_name,button=True)
-    
+
     def save_indiv(self, name=None):
         print "saving individual:", self.last_button
         for indiv in self.ge.individuals:
@@ -456,7 +456,7 @@ class GUI:
             if indiv.uid == int(self.last_button):
                 analyser = AZR.Analyser(indiv.uid,indiv.phenotype,False)
                 analyser.create_graph()
-                analyser.save_dxf(self.ge.generation, name='indiv') 
+                analyser.save_dxf(self.ge.generation, name='indiv')
                 self.show_msg("saved bridge as DXF "+self.last_button+" in dxf folder")
 
     def show_best(self, load_pop=True):
@@ -476,7 +476,7 @@ class GUI:
         self.clear_folder()
         dat_file = tkFileDialog.askopenfile(parent=self.root,
                                             filetypes=[("dat file","*.dat")],
-                                            initialdir=os.getcwd(), 
+                                            initialdir=os.getcwd(),
                                             mode='rb',title='Choose a file')
         #read results
         print "loading file", dat_file.name
@@ -490,7 +490,7 @@ class GUI:
                               'genome': array[2]}
                     results.append(result)
             dat_file.close()
-       
+
         for result in results:
             uid = result['uid']
             genome = eval(result['genome'])

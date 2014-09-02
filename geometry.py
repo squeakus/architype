@@ -7,7 +7,7 @@
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# You should have received a copy of the GNU General Public License 
+# You should have received a copy of the GNU General Public License
 # along with Architype.  If not, see <http://www.gnu.org/licenses/>.
 # Author Jonathan Byrne 2014
 
@@ -100,7 +100,7 @@ def xy_rotate(point, degree_val):
     rotate_y = (- point[0] * sin(ang)) + (point[1] * cos(ang))
     rotated = (rotate_x, rotate_y, point[2])
     return rotated
-    
+
 def xy_rotate_points(points, degree_val):
     "rotates list of points around xy axis"
     rotated_list = []

@@ -7,7 +7,7 @@
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# You should have received a copy of the GNU General Public License 
+# You should have received a copy of the GNU General Public License
 # along with Architype.  If not, see <http://www.gnu.org/licenses/>.
 # Author Jonathan Byrne 2014
 
@@ -61,7 +61,7 @@ def lambda_graph():
     line_points = optimal_line_placement(6)
     line_offset = (max_width * 1.5, 0 , height[2])
     line_points = line_points[0:3]
-    
+
     #offset to correct height
     for i in range(len(line_points)):
         line_points[i] = pt_plus_pt(line_points[i],line_offset)
@@ -117,7 +117,7 @@ def lambda_graph():
             node_id = pylon_graph.add_unique_node(centre(t), 'centre')
             centre_ids.append(node_id)
             brace_ids.extend(cross_brace(node_id, t))
-                
+
         if level in range(1, 4):
             brace_set = list(set(brace_ids))
             brace_set.sort()
@@ -132,7 +132,7 @@ def lambda_graph():
                        base_offset=[width[x],0,0],
                        brace_type=brace_type[x],
                        top_offset=[width[x+1],0,0],
-                       subsecs=subsecs[x])  
+                       subsecs=subsecs[x])
         make_section(x)
 
     #pylon_graph.connect_nodes(centre_ids)

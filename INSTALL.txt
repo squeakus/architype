@@ -17,8 +17,11 @@ ln -s ./slffea-1.5/beam/beam/bm /usr/local/bin
 ln -s ./slffea-1.5/beam/beam/bmpost /usr/local/bin
 
 if no images are being shown then you need to recompile animedit
-which is also available in my github repo:
-compile it for your os and overwrite the existing file
+which is also available in my github repo at:
+https://github.com/squeakus/animate
+
+
+compile it for your os and copy it to the population folder:
 mv ./mesh/animedit <architype_folder>/population/linuxMedit
 also make sure all the python libraries are installed
 sudo apt-get install python python-tk idle python-pmw python-imaging
